@@ -3,10 +3,12 @@ const app = express();
 app.use(express.json());
 const cookies = require("cookie-parser");
 app.use(cookies());
+require("dotenv").config();
+const path = require("path");
 const verifyToken = require("./tokens/verifyToken");
 const generateToken = require("./tokens/generateToken");
 
-const { connectDatabase } = require("./connection/file");
+const { connectDB } = require("./connection/file");
 const signupModel = require("./models/signup");
 
 const { encrytPassword, verifyPassword } = require("./functions/encryption");
@@ -273,12 +275,22 @@ app.get("/logout", (req, res) => {
   }
 });
 
-connectDatabase();
 
-app.listen(5000, () => {
-  console.log("Server is running at port 5000");
+
+const port = process.env.PORT || 5000;
+app.use(express.static("client/build"));
+app.get("*", (req, res) => {
+  res.sendFile(
+    path.resolve(__dirname + "/client/build/index.html"),
+    function (err) {
+      if (err) {
+        console.log(err);
+      }
+    }
+  );
 });
-
+connectDB();
+app.listen(port, () => console.log("Server is running at Port", port));
 // Cookies are small files of information (encrypted long string of token) that a web server(backend)
 //  generates (while logging) and sends to a web browser (frontend).
 //  Web browsers store the cookies they receive for a predetermined period of time,
