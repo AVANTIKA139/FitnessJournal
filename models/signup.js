@@ -17,6 +17,12 @@ const signupSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    gender: {
+      type: String,
+      required: true,
+      trim: true,
+      
+    },
     weight: {
       type: String,
       required: true,
