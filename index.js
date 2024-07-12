@@ -79,10 +79,10 @@ app.post("/signup", async (req, res) => {
     if (checksignup) {
       return res
         .status(400)
-        .json({ success: false, error: "user(email) already registered" });
+        .json({ success: false, error: "user already registered" });
     }
     const check1signup = await signupModel.findOne({
-      name: req.body.name,
+      name: req.body.username,
     });
     if (check1signup) {
       return res
@@ -92,12 +92,12 @@ app.post("/signup", async (req, res) => {
     const signup = new signupModel({
       email: req.body.email,
       password: await encrytPassword(req.body.password),
-      name: req.body.name,
+      name: req.body.username,
 
       dob: req.body.dob,
       phonenumber: req.body.phonenumber,
       isUnder18: req.body.isUnder18,
-      gender:req.body.gender,
+      gender: req.body.gender,
       weight: req.body.weight,
       height: req.body.height,
       medicalissues: req.body.medicalissues,
@@ -274,8 +274,6 @@ app.get("/logout", (req, res) => {
     return res.status(400).json({ success: false, error: error.message });
   }
 });
-
-
 
 const port = process.env.PORT || 5000;
 app.use(express.static("client/build"));
